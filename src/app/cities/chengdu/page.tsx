@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { ArrowLeft, ExternalLink, Coffee } from "lucide-react";
 
-export default function BeijingPage() {
+export default function ChengduPage() {
   return (
     <div className="mx-auto max-w-6xl px-4 py-6 md:px-8 md:py-10">
       {/* Back */}
@@ -16,16 +16,16 @@ export default function BeijingPage() {
       {/* Hero 16:9 */}
       <div className="relative mb-10 overflow-hidden rounded-2xl" style={{ aspectRatio: "16/9" }}>
         <Image
-          src="https://images.unsplash.com/photo-1508804185872-d7badad00f7d?w=1200&q=80"
-          alt="Beijing"
+          src="https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?w=1200&q=80"
+          alt="Chengdu"
           fill
           className="object-cover"
           priority
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
         <div className="absolute bottom-6 left-6 md:bottom-10 md:left-10">
-          <h1 className="text-3xl font-semibold text-white md:text-5xl">Beijing</h1>
-          <p className="mt-1 text-sm text-white/70 md:text-base">北京</p>
+          <h1 className="text-3xl font-semibold text-white md:text-5xl">Chengdu</h1>
+          <p className="mt-1 text-sm text-white/70 md:text-base">成都</p>
         </div>
       </div>
 
@@ -34,12 +34,12 @@ export default function BeijingPage() {
         <h2 className="mb-5 text-xs font-semibold tracking-[3px] text-stone/50 uppercase">Top Experiences</h2>
         <div className="grid grid-cols-3 gap-3 md:grid-cols-6">
           {[
-            { name: "Forbidden City", cn: "故宫", img: "https://images.unsplash.com/photo-1559715541-5d5e8b2b2d6a?w=300&q=80" },
-            { name: "Great Wall", cn: "长城", img: "https://images.unsplash.com/photo-1508804185872-d7badad00f7d?w=300&q=80" },
-            { name: "Temple of Heaven", cn: "天坛", img: "https://images.unsplash.com/photo-1585565804112-f295f2f95a11?w=300&q=80" },
-            { name: "Summer Palace", cn: "颐和园", img: "https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?w=300&q=80" },
-            { name: "Nanluoguxiang", cn: "南锣鼓巷", img: "https://images.unsplash.com/photo-1557411732-1797ed2f8a1c?w=300&q=80" },
-            { name: "Peking Duck", cn: "北京烤鸭", img: "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=300&q=80" },
+            { name: "Panda Base", cn: "大熊猫基地", img: "https://images.unsplash.com/photo-1557411732-1797ed2f8a1c?w=300&q=80" },
+            { name: "Jinli Ancient Street", cn: "锦里古街", img: "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=300&q=80" },
+            { name: "Wuhou Shrine", cn: "武侯祠", img: "https://images.unsplash.com/photo-1508804185872-d7badad00f7d?w=300&q=80" },
+            { name: "Dujiangyan", cn: "都江堰", img: "https://images.unsplash.com/photo-1559715541-5d5e8b2b2d6a?w=300&q=80" },
+            { name: "Leshan Giant Buddha", cn: "乐山大佛", img: "https://images.unsplash.com/photo-1585565804112-f295f2f95a11?w=300&q=80" },
+            { name: "Sichuan Hotpot", cn: "四川火锅", img: "https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?w=300&q=80" },
           ].map((item) => (
             <div key={item.name} className="group cursor-pointer">
               <div className="relative mb-2 overflow-hidden rounded-xl" style={{ aspectRatio: "1/1" }}>
@@ -58,21 +58,21 @@ export default function BeijingPage() {
 
         {/* Day 1 */}
         <div className="mb-10">
-          <h3 className="mb-3 text-lg font-medium">Day 1: Imperial Grandeur</h3>
+          <h3 className="mb-3 text-lg font-medium">Day 1: Pandas & Ancient Streets</h3>
           <div className="relative mb-4 overflow-hidden rounded-2xl" style={{ aspectRatio: "16/9" }}>
             <Image
-              src="https://images.unsplash.com/photo-1559715541-5d5e8b2b2d6a?w=800&q=80"
-              alt="Forbidden City"
+              src="https://images.unsplash.com/photo-1557411732-1797ed2f8a1c?w=800&q=80"
+              alt="Panda Base"
               fill
               className="object-cover"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
-            <span className="absolute bottom-3 left-3 rounded-full bg-white/90 px-3 py-1 text-xs font-medium text-ink backdrop-blur-sm">🏯 Forbidden City</span>
+            <span className="absolute bottom-3 left-3 rounded-full bg-white/90 px-3 py-1 text-xs font-medium text-ink backdrop-blur-sm">🐼 Panda Base</span>
           </div>
           <div className="space-y-2 text-sm text-stone">
-            <p>🔵 <strong>Morning:</strong> Forbidden City (¥60, book 7 days ahead)</p>
-            <p>🔵 <strong>Afternoon:</strong> Jingshan Park for panoramic views</p>
-            <p>🔵 <strong>Evening:</strong> Wangfujing Night Market</p>
+            <p>🔵 <strong>Morning:</strong> Panda Base (¥55, arrive by 8am — pandas are most active in the morning)</p>
+            <p>🔵 <strong>Transport:</strong> Metro Line 3, Panda Avenue Station + shuttle bus</p>
+            <p>🔵 <strong>Evening:</strong> Jinli Ancient Street (Free, best when red lanterns light up)</p>
             <button className="mt-2 inline-flex items-center gap-1 rounded-full bg-celadon/10 px-3 py-1.5 text-xs font-medium text-celadon">
               🚕 Show Driver
               <ExternalLink size={12} />
@@ -82,40 +82,41 @@ export default function BeijingPage() {
 
         {/* Day 2 */}
         <div className="mb-10">
-          <h3 className="mb-3 text-lg font-medium">Day 2: The Great Wall</h3>
+          <h3 className="mb-3 text-lg font-medium">Day 2: History & Engineering</h3>
           <div className="relative mb-4 overflow-hidden rounded-2xl" style={{ aspectRatio: "16/9" }}>
             <Image
               src="https://images.unsplash.com/photo-1508804185872-d7badad00f7d?w=800&q=80"
-              alt="Great Wall"
+              alt="Wuhou Shrine"
               fill
               className="object-cover"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
-            <span className="absolute bottom-3 left-3 rounded-full bg-white/90 px-3 py-1 text-xs font-medium text-ink backdrop-blur-sm">🧱 Great Wall</span>
+            <span className="absolute bottom-3 left-3 rounded-full bg-white/90 px-3 py-1 text-xs font-medium text-ink backdrop-blur-sm">⛩️ Wuhou Shrine</span>
           </div>
           <div className="space-y-2 text-sm text-stone">
-            <p>🔵 <strong>Full Day:</strong> Badaling Great Wall (¥40, leave by 7am)</p>
-            <p>🔵 <strong>Transport:</strong> HSR from Qinghe Station to Badaling (20min)</p>
+            <p>🔵 <strong>Morning:</strong> Wuhou Shrine (¥50, the red wall corridor is the most photogenic spot)</p>
+            <p>🔵 <strong>Afternoon:</strong> Dujiangyan Irrigation System (¥80, HSR 30min ¥30 — 2,200-year-old marvel)</p>
+            <p>🔵 <strong>Evening:</strong> Mapo Tofu at Chen Mapo Tofu (¥25-35) + Dan Dan Noodles (¥10-15)</p>
           </div>
         </div>
 
-        {/* Day 3 - quick summary for brevity */}
+        {/* Day 3 */}
         <div className="mb-10">
-          <h3 className="mb-3 text-lg font-medium">Day 3: Temples & Hutongs</h3>
+          <h3 className="mb-3 text-lg font-medium">Day 3: Buddha & Hotpot</h3>
           <div className="relative mb-4 overflow-hidden rounded-2xl" style={{ aspectRatio: "16/9" }}>
             <Image
-              src="https://images.unsplash.com/photo-1585565804112-f295f2f95a11?w=800&q=80"
-              alt="Temple of Heaven"
+              src="https://images.unsplash.com/photo-1559715541-5d5e8b2b2d6a?w=800&q=80"
+              alt="Leshan Giant Buddha"
               fill
               className="object-cover"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
-            <span className="absolute bottom-3 left-3 rounded-full bg-white/90 px-3 py-1 text-xs font-medium text-ink backdrop-blur-sm">⛩️ Temple of Heaven</span>
+            <span className="absolute bottom-3 left-3 rounded-full bg-white/90 px-3 py-1 text-xs font-medium text-ink backdrop-blur-sm">🗿 Leshan Giant Buddha</span>
           </div>
           <div className="space-y-2 text-sm text-stone">
-            <p>🔵 <strong>Morning:</strong> Temple of Heaven (¥34)</p>
-            <p>🔵 <strong>Afternoon:</strong> Summer Palace (¥30)</p>
-            <p>🔵 <strong>Evening:</strong> Nanluoguxiang hutongs + local dinner</p>
+            <p>🔵 <strong>Full Day:</strong> Leshan Giant Buddha (¥80, take the boat ¥70 for the full view)</p>
+            <p>🔵 <strong>Transport:</strong> HSR from Chengdu South to Leshan (45min, ¥54)</p>
+            <p>🔵 <strong>Evening:</strong> Sichuan Hotpot at Huangcheng Laoma (¥80-150/person)</p>
           </div>
         </div>
       </section>

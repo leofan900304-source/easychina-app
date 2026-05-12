@@ -16,7 +16,7 @@ export default function PaymentPage() {
 
       <div className="mt-10 space-y-8">
         <div className="rounded-2xl border border-black/5 bg-surface-card p-6">
-          <h2 className="text-base font-semibold">💳 Alipay (支付宝)</h2>
+          <h2 className="text-base font-semibold">💳 Alipay</h2>
           <p className="mt-2 text-sm leading-relaxed text-stone">
             The most widely accepted payment method. You can now bind
             international Visa/Mastercard/Amex cards directly.
@@ -33,7 +33,7 @@ export default function PaymentPage() {
         </div>
 
         <div className="rounded-2xl border border-black/5 bg-surface-card p-6">
-          <h2 className="text-base font-semibold">💳 WeChat Pay (微信支付)</h2>
+          <h2 className="text-base font-semibold">💳 WeChat Pay</h2>
           <p className="mt-2 text-sm leading-relaxed text-stone">
             Also very popular, especially outside major cities. Similar setup
             process to Alipay with international card support.

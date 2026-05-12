@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
+import { FeedbackButton } from "@/components/FeedbackButton";
+import { AIChat } from "@/components/AIChat";
 import "./globals.css";
 
 const inter = Inter({
@@ -17,14 +19,6 @@ export const metadata: Metadata = {
   },
   description:
     "Plan your China trip with confidence. Personalized itineraries, prep guides, and insider tips for international travelers.",
-  keywords: [
-    "China travel",
-    "travel China",
-    "China itinerary",
-    "China guide",
-    "foreigner China travel",
-    "China trip planner",
-  ],
   openGraph: {
     title: "EasyChina — China Travel, Made Easy",
     description:
@@ -46,6 +40,8 @@ export default function RootLayout({
         <Header />
         <main className="min-h-[calc(100vh-12rem)]">{children}</main>
         <Footer />
+        <AIChat />
+        <FeedbackButton />
       </body>
     </html>
   );

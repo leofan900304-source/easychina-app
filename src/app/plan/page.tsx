@@ -4,19 +4,36 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowRight, ArrowLeft, Sparkles } from "lucide-react";
 
-/* ===== 步骤定义 ===== */
+/* ===== Step definitions ===== */
 type TravelPreferences = {
+  departureCity: string;
   entryCity: string;
+  exitCity: string;
   duration: number;
   budget: "budget" | "economic" | "comfortable" | "luxury";
   companions: "solo" | "couple" | "friends" | "family_kids" | "family_elderly";
   firstTime: boolean;
-  appFamiliarity: number; // 1-5
+  appFamiliarity: number; // 1–5
   preferences: string[];
   pace: "packed" | "balanced" | "relaxed";
   diet: string[];
   specialNeeds: string;
 };
+
+const departureCities = [
+  { value: "new_york", label: "New York (JFK)" },
+  { value: "los_angeles", label: "Los Angeles (LAX)" },
+  { value: "san_francisco", label: "San Francisco (SFO)" },
+  { value: "london", label: "London (LHR)" },
+  { value: "paris", label: "Paris (CDG)" },
+  { value: "sydney", label: "Sydney (SYD)" },
+  { value: "tokyo", label: "Tokyo (NRT)" },
+  { value: "seoul", label: "Seoul (ICN)" },
+  { value: "singapore", label: "Singapore (SIN)" },
+  { value: "bangkok", label: "Bangkok (BKK)" },
+  { value: "kuala_lumpur", label: "Kuala Lumpur (KUL)" },
+  { value: "other", label: "Other" },
+];
 
 const entryCities = [
   { value: "beijing_capital", label: "北京首都 (PEK)" },
@@ -30,21 +47,21 @@ const entryCities = [
 ];
 
 const preferenceOptions = [
-  { id: "history", label: "历史文化", emoji: "🏛️", desc: "名胜古迹、博物馆、古城" },
-  { id: "nature", label: "自然风光", emoji: "⛰️", desc: "山川、湖泊、国家公园" },
-  { id: "urban", label: "摩登都市", emoji: "🌃", desc: "天际线、购物、夜生活" },
-  { id: "food", label: "美食探索", emoji: "🍜", desc: "街头小吃、当地菜系" },
-  { id: "tech", label: "科技与创新", emoji: "🔬", desc: "科技园区、现代化设施" },
-  { id: "culture", label: "民俗体验", emoji: "🎭", desc: "少数民族文化、手工艺" },
-  { id: "relax", label: "休闲度假", emoji: "♨️", desc: "温泉、度假村、慢节奏" },
-  { id: "adventure", label: "户外探险", emoji: "🧗", desc: "徒步、骑行、极限运动" },
+  { id: "history", label: "History & Culture", emoji: "🏛️", desc: "Historic sites, museums, ancient cities" },
+  { id: "nature", label: "Nature & Scenery", emoji: "⛰️", desc: "Mountains, lakes, national parks" },
+  { id: "urban", label: "Modern City", emoji: "🌃", desc: "Skylines, shopping, nightlife" },
+  { id: "food", label: "Food Exploration", emoji: "🍜", desc: "Street food, local cuisine" },
+  { id: "tech", label: "Tech & Innovation", emoji: "🔬", desc: "Tech parks, modern facilities" },
+  { id: "culture", label: "Cultural Experiences", emoji: "🎭", desc: "Ethnic minority culture, handicrafts" },
+  { id: "relax", label: "Leisure & Relaxation", emoji: "♨️", desc: "Hot springs, resorts, slow pace" },
+  { id: "adventure", label: "Outdoor Adventure", emoji: "🧗", desc: "Hiking, cycling, extreme sports" },
 ];
 
 const dietOptions = [
-  { id: "none", label: "无限制" },
-  { id: "vegetarian", label: "素食 / Vegan" },
-  { id: "halal", label: "清真 (Halal)" },
-  { id: "no_spicy", label: "无辣" },
+  { id: "none", label: "No restrictions" },
+  { id: "vegetarian", label: "Vegetarian / Vegan" },
+  { id: "halal", label: "Halal" },
+  { id: "no_spicy", label: "No spicy" },
 ];
 
 export default function PlanPage() {
@@ -53,7 +70,9 @@ export default function PlanPage() {
   const [isGenerating, setIsGenerating] = useState(false);
 
   const [form, setForm] = useState<TravelPreferences>({
+    departureCity: "",
     entryCity: "",
+    exitCity: "",
     duration: 5,
     budget: "comfortable",
     companions: "solo",
@@ -87,13 +106,25 @@ export default function PlanPage() {
     }));
   };
 
-  const handleGenerate = () => {
+  const handleGenerate = async () => {
     setIsGenerating(true);
-    // 模拟 AI 生成延迟
-    setTimeout(() => {
-      setIsGenerating(false);
+    try {
+      const res = await fetch("/api/generate-itinerary", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+      if (!res.ok) throw new Error("API error");
+      const data = await res.json();
+      // Store the result in sessionStorage and redirect
+      sessionStorage.setItem("itinerary", JSON.stringify(data));
+      router.push("/plan/result/custom");
+    } catch {
+      // Fallback: use demo data if API fails
       router.push("/plan/result/demo");
-    }, 3000);
+    } finally {
+      setIsGenerating(false);
+    }
   };
 
   const canProceed = () => {
@@ -102,12 +133,12 @@ export default function PlanPage() {
     return true;
   };
 
-  // 加载状态
+  // Loading state
   if (isGenerating) {
     return (
       <div className="flex min-h-[60vh] flex-col items-center justify-center px-6">
         <div className="text-center animate-fade-in">
-          {/* 加载动画 */}
+          {/* Loading animation */}
           <div className="relative mx-auto mb-8 flex h-20 w-20 items-center justify-center">
             <div className="absolute inset-0 animate-ping rounded-full bg-celadon/20" />
             <div className="absolute inset-2 rounded-full bg-celadon/30" />
@@ -133,7 +164,7 @@ export default function PlanPage() {
 
   return (
     <div className="mx-auto max-w-2xl px-6 py-12 md:py-20">
-      {/* 步骤指示器 */}
+      {/* Step indicator */}
       <div className="mb-12">
         <div className="flex items-center justify-center gap-2">
           {[1, 2, 3].map((s) => (
@@ -166,14 +197,29 @@ export default function PlanPage() {
         </p>
       </div>
 
-      {/* Step 1: 基础信息 */}
+      {/* Step 1: Basic Info */}
       {step === 1 && (
         <div className="animate-fade-in space-y-6">
           <h2 className="text-2xl font-[450]">Where and when?</h2>
 
-          {/* 入境城市 */}
+          {/* Departure city */}
           <div>
-            <label className="mb-2 block text-sm font-medium">Entry Airport</label>
+            <label className="mb-2 block text-sm font-medium">Departure City <span className="text-stone/50">(where you're flying from)</span></label>
+            <select
+              value={form.departureCity}
+              onChange={(e) => update("departureCity", e.target.value)}
+              className="w-full rounded-xl border border-black/10 bg-white/60 px-4 py-3 text-sm outline-none transition-colors focus:border-celadon focus:ring-1 focus:ring-celadon/20"
+            >
+              <option value="">Select departure...</option>
+              {departureCities.map((city) => (
+                <option key={city.value} value={city.value}>{city.label}</option>
+              ))}
+            </select>
+          </div>
+
+          {/* Entry city */}
+          <div>
+            <label className="mb-2 block text-sm font-medium">Entry Airport (in China)</label>
             <select
               value={form.entryCity}
               onChange={(e) => update("entryCity", e.target.value)}
@@ -188,7 +234,22 @@ export default function PlanPage() {
             </select>
           </div>
 
-          {/* 停留天数 */}
+          {/* Exit city */}
+          <div>
+            <label className="mb-2 block text-sm font-medium">Exit Airport (leave China from)</label>
+            <select
+              value={form.exitCity}
+              onChange={(e) => update("exitCity", e.target.value)}
+              className="w-full rounded-xl border border-black/10 bg-white/60 px-4 py-3 text-sm outline-none transition-colors focus:border-celadon focus:ring-1 focus:ring-celadon/20"
+            >
+              <option value="">Select exit city...</option>
+              {entryCities.map((city) => (
+                <option key={city.value} value={city.value}>{city.label}</option>
+              ))}
+            </select>
+          </div>
+
+          {/* Duration */}
           <div>
             <label className="mb-2 block text-sm font-medium">
               Duration: <span className="text-celadon">{form.duration} days</span>
@@ -207,7 +268,7 @@ export default function PlanPage() {
             </div>
           </div>
 
-          {/* 预算 */}
+          {/* Budget */}
           <div>
             <label className="mb-2 block text-sm font-medium">Budget</label>
             <div className="grid grid-cols-4 gap-2">
@@ -221,25 +282,25 @@ export default function PlanPage() {
                       : "border-black/5 bg-white/40 text-stone hover:border-black/10"
                   }`}
                 >
-                  {b === "budget" && "🎒 穷游"}
-                  {b === "economic" && "💰 经济"}
-                  {b === "comfortable" && "🌟 舒适"}
-                  {b === "luxury" && "👑 豪华"}
+                  {b === "budget" && "🎒 Budget"}
+                  {b === "economic" && "💰 Economic"}
+                  {b === "comfortable" && "🌟 Comfortable"}
+                  {b === "luxury" && "👑 Luxury"}
                 </button>
               ))}
             </div>
           </div>
 
-          {/* 同行人 */}
+          {/* Companions */}
           <div>
             <label className="mb-2 block text-sm font-medium">Traveling with</label>
             <div className="grid grid-cols-3 gap-2 sm:grid-cols-5">
               {([
-                { value: "solo", label: "独自" },
-                { value: "couple", label: "情侣" },
-                { value: "friends", label: "朋友" },
-                { value: "family_kids", label: "家庭（有小孩）" },
-                { value: "family_elderly", label: "家庭（有老人）" },
+                { value: "solo", label: "Solo" },
+                { value: "couple", label: "Couple" },
+                { value: "friends", label: "Friends" },
+                { value: "family_kids", label: "Family (kids)" },
+                { value: "family_elderly", label: "Family (elderly)" },
               ] as const).map((opt) => (
                 <button
                   key={opt.value}
@@ -256,10 +317,10 @@ export default function PlanPage() {
             </div>
           </div>
 
-          {/* 是否首次来 + App熟悉度 */}
+          {/* First time + App familiarity */}
           <div className="flex flex-col gap-4 rounded-xl bg-white/30 p-5 sm:flex-row sm:items-center">
             <div className="flex items-center gap-3 sm:flex-1">
-              <span className="text-sm">首次来中国?</span>
+              <span className="text-sm">First time in China?</span>
               <button
                 onClick={() => update("firstTime", true)}
                 className={`rounded-lg px-4 py-1.5 text-xs font-medium transition-all ${
@@ -305,11 +366,38 @@ export default function PlanPage() {
         </div>
       )}
 
-      {/* Step 2: 旅游偏好 */}
+      {/* Step 2: Preferences */}
       {step === 2 && (
         <div className="animate-fade-in space-y-6">
           <h2 className="text-2xl font-[450]">What do you love?</h2>
           <p className="text-sm text-stone">Choose up to 3 preferences</p>
+
+          {/* Quick Tags — Gemini suggestion */}
+          <div className="flex flex-wrap gap-2">
+            {[
+              { id: "food", label: "#Foodie 🍜" },
+              { id: "history", label: "#Historian 🏛️" },
+              { id: "nature", label: "#NatureLover ⛰️" },
+              { id: "urban", label: "#CityExplorer 🌃" },
+              { id: "tech", label: "#TechGeek 🔬" },
+              { id: "culture", label: "#CultureSeeker 🎭" },
+              { id: "relax", label: "#ChillVibes ♨️" },
+              { id: "adventure", label: "#Adventurer 🧗" },
+              { id: "budget", label: "#BudgetTraveler 💰" },
+            ].map((tag) => (
+              <button
+                key={tag.id}
+                onClick={() => togglePreference(tag.id)}
+                className={`rounded-full border px-3 py-1.5 text-xs font-medium transition-all ${
+                  form.preferences.includes(tag.id)
+                    ? "border-celadon bg-celadon/10 text-celadon"
+                    : "border-black/5 bg-white/40 text-stone hover:border-black/10 hover:bg-white/60"
+                }`}
+              >
+                {tag.label}
+              </button>
+            ))}
+          </div>
 
           <div className="grid gap-3 sm:grid-cols-2">
             {preferenceOptions.map((opt) => {
@@ -331,14 +419,14 @@ export default function PlanPage() {
             })}
           </div>
 
-          {/* 行程节奏 */}
+          {/* Pace */}
           <div>
             <label className="mb-2 block text-sm font-medium">Pace</label>
             <div className="grid grid-cols-3 gap-2">
               {([
-                { value: "packed", label: "紧凑充实", desc: "每天排满" },
-                { value: "balanced", label: "适中平衡", desc: "劳逸结合" },
-                { value: "relaxed", label: "悠闲放松", desc: "慢慢逛" },
+                { value: "packed", label: "Packed", desc: "Full schedule every day" },
+                { value: "balanced", label: "Balanced", desc: "Mix of busy and relaxed" },
+                { value: "relaxed", label: "Relaxed", desc: "Take it slow" },
               ] as const).map((opt) => (
                 <button
                   key={opt.value}
@@ -358,7 +446,7 @@ export default function PlanPage() {
         </div>
       )}
 
-      {/* Step 3: 细节 */}
+      {/* Step 3: Details */}
       {step === 3 && (
         <div className="animate-fade-in space-y-6">
           <h2 className="text-2xl font-[450]">Any restrictions?</h2>
@@ -407,7 +495,7 @@ export default function PlanPage() {
         </div>
       )}
 
-      {/* 底部按钮 */}
+      {/* Bottom buttons */}
       <div className="mt-10 flex items-center justify-between">
         {step > 1 ? (
           <button

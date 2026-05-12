@@ -2,12 +2,12 @@ import Link from "next/link";
 import { ArrowRight, Sparkles, Shield, Map } from "lucide-react";
 
 const popularCities = [
-  { name: "北京", tag: "🏛️ 千年古都", type: "历史文化", bg: "bg-[#E8E3DC]" },
-  { name: "上海", tag: "🌃 摩登魔都", type: "摩登都市", bg: "bg-[#E3E8E4]" },
-  { name: "西安", tag: "🏯 十三朝古都", type: "历史文化", bg: "bg-[#E8E0D8]" },
-  { name: "成都", tag: "🐼 熊猫故乡", type: "美食休闲", bg: "bg-[#E0E8E0]" },
-  { name: "重庆", tag: "🏔️ 8D山城", type: "美食都市", bg: "bg-[#E8E0E0]" },
-  { name: "桂林", tag: "⛰️ 山水甲天下", type: "自然风光", bg: "bg-[#E0E8E6]" },
+  { name: "Beijing", slug: "beijing", tag: "🏛️ Ancient Capital & Modern Hub", type: "History & Culture", bg: "bg-[#E8E3DC]" },
+  { name: "Shanghai", slug: "shanghai", tag: "🌃 Vibrant Metropolis", type: "Urban & Modern", bg: "bg-[#E3E8E4]" },
+  { name: "Xi'an", slug: "xian", tag: "🏯 Home of the Terracotta Warriors", type: "History & Culture", bg: "bg-[#E8E0D8]" },
+  { name: "Chengdu", slug: "chengdu", tag: "🐼 Panda Sanctuary & Food Paradise", type: "Food & Nature", bg: "bg-[#E0E8E0]" },
+  { name: "Chongqing", slug: "chongqing", tag: "🏔️ 8D Futuristic Mountain City", type: "Food & Urban", bg: "bg-[#E8E0E0]" },
+  { name: "Guilin", slug: "guilin", tag: "⛰️ Legendary Karst Landscapes", type: "Nature & Scenery", bg: "bg-[#E0E8E6]" },
 ];
 
 export default function Home() {
@@ -127,7 +127,7 @@ export default function Home() {
             {popularCities.map((city) => (
               <Link
                 key={city.name}
-                href={`/cities/${city.name}`}
+                href={`/cities/${city.slug}`}
                 className={`${city.bg} city-card group`}
               >
                 <div className="flex items-center justify-between">
@@ -172,6 +172,29 @@ export default function Home() {
             Start Your Trip Plan
             <ArrowRight size={18} />
           </Link>
+        </div>
+      </section>
+
+      {/* Travel Essentials */}
+      <section className="border-t border-black/5 px-6 py-12">
+        <div className="mx-auto max-w-2xl text-center">
+          <h2 className="text-xs font-semibold tracking-[3px] text-stone/50 uppercase">Travel Essentials</h2>
+          <div className="mt-6 flex flex-wrap justify-center gap-3">
+            <a href="/prepare/sim" className="rounded-full border border-black/5 bg-white px-5 py-2.5 text-xs font-medium text-stone transition-all hover:border-emerald-200 hover:text-emerald-600">
+              📱 eSIM & Internet
+            </a>
+            <a href="/prepare/payment" className="rounded-full border border-black/5 bg-white px-5 py-2.5 text-xs font-medium text-stone transition-all hover:border-blue-200 hover:text-blue-600">
+              💳 Payment Guide
+            </a>
+            <a href="/prepare/apps" className="rounded-full border border-black/5 bg-white px-5 py-2.5 text-xs font-medium text-stone transition-all hover:border-amber-200 hover:text-amber-600">
+              📲 Essential Apps
+            </a>
+          </div>
+          <div className="mt-6 flex items-center justify-center gap-4 text-xs text-stone/50">
+            <a href="#" className="hover:text-stone">📱 Airalo eSIM</a>
+            <a href="#" className="hover:text-stone">🔒 ExpressVPN</a>
+            <a href="#" className="hover:text-stone">☕ Support Us</a>
+          </div>
         </div>
       </section>
     </>

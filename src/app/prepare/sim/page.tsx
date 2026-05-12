@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowLeft, ExternalLink } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 
 export default function SimPage() {
   return (
@@ -15,7 +15,7 @@ export default function SimPage() {
       </p>
 
       <div className="mt-10 space-y-8">
-        {/* 方案对比表格 */}
+        {/* Plan comparison table */}
         <div className="overflow-hidden rounded-2xl border border-black/5">
           <table className="w-full text-sm">
             <thead>
@@ -60,6 +60,25 @@ export default function SimPage() {
               <li>• NordVPN — solid option</li>
               <li>• Mullvad — privacy focused</li>
             </ul>
+            <div className="mt-4 flex gap-2">
+              <a href="#" className="flex-1 rounded-lg bg-blue-600 py-2 text-center text-xs font-medium text-white transition-all hover:bg-blue-700">Get ExpressVPN →</a>
+              <a href="#" className="flex-1 rounded-lg bg-blue-600 py-2 text-center text-xs font-medium text-white transition-all hover:bg-blue-700">Get Astrill →</a>
+            </div>
+          </div>
+        </div>
+
+        {/* eSIM Purchase CTA */}
+        <div className="rounded-2xl border border-emerald-200 bg-gradient-to-br from-emerald-50 to-white p-6">
+          <div className="flex items-center gap-3">
+            <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-100 text-lg">📱</span>
+            <div>
+              <p className="text-sm font-semibold">Need a China eSIM?</p>
+              <p className="text-xs text-stone/50">Instant 4G/5G, no physical SIM needed</p>
+            </div>
+          </div>
+          <div className="mt-4 flex gap-2">
+            <a href="#" className="flex-1 rounded-lg bg-emerald-600 py-2.5 text-center text-xs font-medium text-white transition-all hover:bg-emerald-700">Airalo eSIM →</a>
+            <a href="#" className="flex-1 rounded-lg bg-emerald-600 py-2.5 text-center text-xs font-medium text-white transition-all hover:bg-emerald-700">Holafly eSIM →</a>
           </div>
         </div>
       </div>

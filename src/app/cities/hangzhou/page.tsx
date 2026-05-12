@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { ArrowLeft, ExternalLink, Coffee } from "lucide-react";
 
-export default function BeijingPage() {
+export default function HangzhouPage() {
   return (
     <div className="mx-auto max-w-6xl px-4 py-6 md:px-8 md:py-10">
       {/* Back */}
@@ -16,16 +16,16 @@ export default function BeijingPage() {
       {/* Hero 16:9 */}
       <div className="relative mb-10 overflow-hidden rounded-2xl" style={{ aspectRatio: "16/9" }}>
         <Image
-          src="https://images.unsplash.com/photo-1508804185872-d7badad00f7d?w=1200&q=80"
-          alt="Beijing"
+          src="https://images.unsplash.com/photo-1559715541-5d5e8b2b2d6a?w=1200&q=80"
+          alt="Hangzhou"
           fill
           className="object-cover"
           priority
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
         <div className="absolute bottom-6 left-6 md:bottom-10 md:left-10">
-          <h1 className="text-3xl font-semibold text-white md:text-5xl">Beijing</h1>
-          <p className="mt-1 text-sm text-white/70 md:text-base">北京</p>
+          <h1 className="text-3xl font-semibold text-white md:text-5xl">Hangzhou</h1>
+          <p className="mt-1 text-sm text-white/70 md:text-base">杭州</p>
         </div>
       </div>
 
@@ -34,12 +34,12 @@ export default function BeijingPage() {
         <h2 className="mb-5 text-xs font-semibold tracking-[3px] text-stone/50 uppercase">Top Experiences</h2>
         <div className="grid grid-cols-3 gap-3 md:grid-cols-6">
           {[
-            { name: "Forbidden City", cn: "故宫", img: "https://images.unsplash.com/photo-1559715541-5d5e8b2b2d6a?w=300&q=80" },
-            { name: "Great Wall", cn: "长城", img: "https://images.unsplash.com/photo-1508804185872-d7badad00f7d?w=300&q=80" },
-            { name: "Temple of Heaven", cn: "天坛", img: "https://images.unsplash.com/photo-1585565804112-f295f2f95a11?w=300&q=80" },
-            { name: "Summer Palace", cn: "颐和园", img: "https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?w=300&q=80" },
-            { name: "Nanluoguxiang", cn: "南锣鼓巷", img: "https://images.unsplash.com/photo-1557411732-1797ed2f8a1c?w=300&q=80" },
-            { name: "Peking Duck", cn: "北京烤鸭", img: "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=300&q=80" },
+            { name: "West Lake", cn: "西湖", img: "https://images.unsplash.com/photo-1585565804112-f295f2f95a11?w=300&q=80" },
+            { name: "Lingyin Temple", cn: "灵隐寺", img: "https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?w=300&q=80" },
+            { name: "Longjing Tea Village", cn: "龙井村", img: "https://images.unsplash.com/photo-1557411732-1797ed2f8a1c?w=300&q=80" },
+            { name: "Hefang Street", cn: "河坊街", img: "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=300&q=80" },
+            { name: "Xixi Wetland Park", cn: "西溪湿地", img: "https://images.unsplash.com/photo-1508804185872-d7badad00f7d?w=300&q=80" },
+            { name: "Dongpo Pork", cn: "东坡肉", img: "https://images.unsplash.com/photo-1559715541-5d5e8b2b2d6a?w=300&q=80" },
           ].map((item) => (
             <div key={item.name} className="group cursor-pointer">
               <div className="relative mb-2 overflow-hidden rounded-xl" style={{ aspectRatio: "1/1" }}>
@@ -58,21 +58,21 @@ export default function BeijingPage() {
 
         {/* Day 1 */}
         <div className="mb-10">
-          <h3 className="mb-3 text-lg font-medium">Day 1: Imperial Grandeur</h3>
+          <h3 className="mb-3 text-lg font-medium">Day 1: West Lake & Tea Culture</h3>
           <div className="relative mb-4 overflow-hidden rounded-2xl" style={{ aspectRatio: "16/9" }}>
             <Image
-              src="https://images.unsplash.com/photo-1559715541-5d5e8b2b2d6a?w=800&q=80"
-              alt="Forbidden City"
+              src="https://images.unsplash.com/photo-1585565804112-f295f2f95a11?w=800&q=80"
+              alt="West Lake"
               fill
               className="object-cover"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
-            <span className="absolute bottom-3 left-3 rounded-full bg-white/90 px-3 py-1 text-xs font-medium text-ink backdrop-blur-sm">🏯 Forbidden City</span>
+            <span className="absolute bottom-3 left-3 rounded-full bg-white/90 px-3 py-1 text-xs font-medium text-ink backdrop-blur-sm">🌊 West Lake</span>
           </div>
           <div className="space-y-2 text-sm text-stone">
-            <p>🔵 <strong>Morning:</strong> Forbidden City (¥60, book 7 days ahead)</p>
-            <p>🔵 <strong>Afternoon:</strong> Jingshan Park for panoramic views</p>
-            <p>🔵 <strong>Evening:</strong> Wangfujing Night Market</p>
+            <p>🔵 <strong>Morning:</strong> West Lake (Free, rent a bike and cycle the 10km lake loop)</p>
+            <p>🔵 <strong>Afternoon:</strong> Longjing Tea Village (Free, visit a plantation for tea tasting)</p>
+            <p>🔵 <strong>Transport:</strong> Bus 27 from West Lake area (30min) to Longjing Village</p>
             <button className="mt-2 inline-flex items-center gap-1 rounded-full bg-celadon/10 px-3 py-1.5 text-xs font-medium text-celadon">
               🚕 Show Driver
               <ExternalLink size={12} />
@@ -82,40 +82,41 @@ export default function BeijingPage() {
 
         {/* Day 2 */}
         <div className="mb-10">
-          <h3 className="mb-3 text-lg font-medium">Day 2: The Great Wall</h3>
+          <h3 className="mb-3 text-lg font-medium">Day 2: Temples & Streets</h3>
           <div className="relative mb-4 overflow-hidden rounded-2xl" style={{ aspectRatio: "16/9" }}>
             <Image
-              src="https://images.unsplash.com/photo-1508804185872-d7badad00f7d?w=800&q=80"
-              alt="Great Wall"
+              src="https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?w=800&q=80"
+              alt="Lingyin Temple"
               fill
               className="object-cover"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
-            <span className="absolute bottom-3 left-3 rounded-full bg-white/90 px-3 py-1 text-xs font-medium text-ink backdrop-blur-sm">🧱 Great Wall</span>
+            <span className="absolute bottom-3 left-3 rounded-full bg-white/90 px-3 py-1 text-xs font-medium text-ink backdrop-blur-sm">⛩️ Lingyin Temple</span>
           </div>
           <div className="space-y-2 text-sm text-stone">
-            <p>🔵 <strong>Full Day:</strong> Badaling Great Wall (¥40, leave by 7am)</p>
-            <p>🔵 <strong>Transport:</strong> HSR from Qinghe Station to Badaling (20min)</p>
+            <p>🔵 <strong>Morning:</strong> Lingyin Temple (¥45, the flying peak grottoes are just as impressive as the temple)</p>
+            <p>🔵 <strong>Afternoon:</strong> Hefang Street (Free, try the stinky tofu — it's surprisingly good)</p>
+            <p>🔵 <strong>Evening:</strong> Dongpo Pork at Lou Wai Lou (¥60-100)</p>
           </div>
         </div>
 
-        {/* Day 3 - quick summary for brevity */}
+        {/* Day 3 */}
         <div className="mb-10">
-          <h3 className="mb-3 text-lg font-medium">Day 3: Temples & Hutongs</h3>
+          <h3 className="mb-3 text-lg font-medium">Day 3: Wetlands & Food</h3>
           <div className="relative mb-4 overflow-hidden rounded-2xl" style={{ aspectRatio: "16/9" }}>
             <Image
-              src="https://images.unsplash.com/photo-1585565804112-f295f2f95a11?w=800&q=80"
-              alt="Temple of Heaven"
+              src="https://images.unsplash.com/photo-1557411732-1797ed2f8a1c?w=800&q=80"
+              alt="Xixi Wetland"
               fill
               className="object-cover"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
-            <span className="absolute bottom-3 left-3 rounded-full bg-white/90 px-3 py-1 text-xs font-medium text-ink backdrop-blur-sm">⛩️ Temple of Heaven</span>
+            <span className="absolute bottom-3 left-3 rounded-full bg-white/90 px-3 py-1 text-xs font-medium text-ink backdrop-blur-sm">🌿 Xixi Wetland Park</span>
           </div>
           <div className="space-y-2 text-sm text-stone">
-            <p>🔵 <strong>Morning:</strong> Temple of Heaven (¥34)</p>
-            <p>🔵 <strong>Afternoon:</strong> Summer Palace (¥30)</p>
-            <p>🔵 <strong>Evening:</strong> Nanluoguxiang hutongs + local dinner</p>
+            <p>🔵 <strong>Morning:</strong> Xixi Wetland Park (¥80, take the boat tour through the waterways)</p>
+            <p>🔵 <strong>Afternoon:</strong> Longjing Shrimp at Grandma's House (¥80-120) + Beggar's Chicken (¥70-100)</p>
+            <p>🔵 <strong>Evening:</strong> West Lake Vinegar Fish at Zhi Wei Guan (¥60-90)</p>
           </div>
         </div>
       </section>

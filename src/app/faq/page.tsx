@@ -47,7 +47,7 @@ const faqs = [
 ];
 
 export default function FAQPage() {
-  const [openIndex, setOpenIndex] = useState<number | null>(0);
+  const [openIndex, setOpenIndex] = useState<string | null>("Internet & VPN-0");
 
   return (
     <div className="mx-auto max-w-3xl px-6 py-12 md:py-20">

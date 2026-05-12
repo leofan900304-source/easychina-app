@@ -1,111 +1,166 @@
+"use client";
+
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
+import Image from "next/image";
+import { ArrowLeft, ExternalLink, Coffee } from "lucide-react";
 
 export default function ChongqingPage() {
   return (
-    <div className="mx-auto max-w-4xl px-6 py-12 md:py-20">
-      <Link href="/cities" className="mb-8 inline-flex items-center gap-1.5 text-xs text-stone transition-colors hover:text-ink">
+    <div className="mx-auto max-w-6xl px-4 py-6 md:px-8 md:py-10">
+      {/* Back */}
+      <Link href="/cities" className="mb-4 inline-flex items-center gap-1.5 text-xs text-stone transition-colors hover:text-ink">
         <ArrowLeft size={14} />
         All Cities
       </Link>
 
-      {/* City Header */}
-      <div className="mb-10">
-        <h1 className="text-4xl font-[450] tracking-tight">重庆</h1>
-        <p className="mt-2 text-lg text-stone">🏔️ 8D魔幻山城</p>
-        <p className="mt-3 max-w-lg text-sm leading-relaxed text-stone/70 italic">
-          &ldquo;一座建在山上的城市，轻轨穿楼过，火锅满街香。
-          没有东西南北，只有上下左右。来了就知道什么叫魔幻现实主义。&rdquo;
-        </p>
-        <div className="mt-4 flex flex-wrap gap-2">
-          {["美食探索 ★★★★★", "摩登都市 ★★★★☆", "自然风光 ★★★☆☆"].map((t) => (
-            <span key={t} className="rounded-full bg-celadon/10 px-3 py-1 text-xs text-celadon">{t}</span>
-          ))}
+      {/* Hero 16:9 */}
+      <div className="relative mb-10 overflow-hidden rounded-2xl" style={{ aspectRatio: "16/9" }}>
+        <Image
+          src="https://images.unsplash.com/photo-1557411732-1797ed2f8a1c?w=1200&q=80"
+          alt="Chongqing"
+          fill
+          className="object-cover"
+          priority
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
+        <div className="absolute bottom-6 left-6 md:bottom-10 md:left-10">
+          <h1 className="text-3xl font-semibold text-white md:text-5xl">Chongqing</h1>
+          <p className="mt-1 text-sm text-white/70 md:text-base">重庆</p>
         </div>
       </div>
 
-      {/* 必游景点 */}
+      {/* Top Experiences */}
       <section className="mb-12">
-        <h2 className="mb-6 text-xs font-semibold tracking-[3px] text-stone/50 uppercase">Must-See Attractions</h2>
-        <div className="space-y-4">
+        <h2 className="mb-5 text-xs font-semibold tracking-[3px] text-stone/50 uppercase">Top Experiences</h2>
+        <div className="grid grid-cols-3 gap-3 md:grid-cols-6">
           {[
-            { name: "洪崖洞", time: "2-3小时", tip: "傍晚+夜景最美。从1楼进电梯到11楼出去还是马路——这就是重庆", transport: "地铁1号线/6号线 小什字站" },
-            { name: "长江索道", time: "15分钟", tip: "建议从南向北坐，视野更好。单程¥20", transport: "地铁6号线 上新街站" },
-            { name: "磁器口古镇", time: "2-3小时", tip: "周末人很多，建议工作日去", transport: "地铁1号线 磁器口站" },
-            { name: "解放碑 / 八一好吃街", time: "1-2小时", tip: "周边巷子里有很多地道老火锅", transport: "地铁2号线 临江门站" },
-            { name: "武隆天生三桥", time: "全天", tip: "变形金刚4取景地，可在美团/Trip.com订票 ¥125", transport: "市区→武隆 大巴2.5h 或 火车2h" },
-          ].map((spot) => (
-            <div key={spot.name} className="rounded-2xl border border-black/5 bg-surface-card p-5">
-              <h3 className="font-medium">{spot.name}</h3>
-              <div className="mt-2 flex flex-wrap gap-4 text-xs text-stone">
-                <span>⏱️ {spot.time}</span>
-                <span>🚇 {spot.transport}</span>
+            { name: "Hongya Cave", cn: "洪崖洞", img: "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=300&q=80" },
+            { name: "Yangtze Cableway", cn: "长江索道", img: "https://images.unsplash.com/photo-1508804185872-d7badad00f7d?w=300&q=80" },
+            { name: "Ciqikou Ancient Town", cn: "磁器口古镇", img: "https://images.unsplash.com/photo-1559715541-5d5e8b2b2d6a?w=300&q=80" },
+            { name: "Jiefangbei", cn: "解放碑", img: "https://images.unsplash.com/photo-1585565804112-f295f2f95a11?w=300&q=80" },
+            { name: "Wulong Bridges", cn: "武隆天生三桥", img: "https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?w=300&q=80" },
+            { name: "Chongqing Hotpot", cn: "重庆火锅", img: "https://images.unsplash.com/photo-1557411732-1797ed2f8a1c?w=300&q=80" },
+          ].map((item) => (
+            <div key={item.name} className="group cursor-pointer">
+              <div className="relative mb-2 overflow-hidden rounded-xl" style={{ aspectRatio: "1/1" }}>
+                <Image src={item.img} alt={item.name} fill className="object-cover transition-transform duration-300 group-hover:scale-105" />
               </div>
-              <p className="mt-2 text-xs text-stone/60">💡 {spot.tip}</p>
+              <p className="text-center text-xs font-medium text-ink">{item.name}</p>
+              <p className="text-center text-[10px] text-stone/50">{item.cn}</p>
             </div>
           ))}
         </div>
       </section>
 
-      {/* 美食 */}
+      {/* Itinerary Preview */}
       <section className="mb-12">
-        <h2 className="mb-6 text-xs font-semibold tracking-[3px] text-stone/50 uppercase">Must-Try Food</h2>
-        <div className="grid gap-3 sm:grid-cols-2">
-          {[
-            { name: "重庆火锅", place: "佩姐老火锅 / 周师兄大刀腰片", tip: "不能吃辣请提前说'微微辣'" },
-            { name: "重庆小面", place: "随便一家路边摊都好吃", tip: "早餐首选" },
-            { name: "酸辣粉", place: "好又来酸辣粉", tip: "解放碑附近有好又来的店" },
-            { name: "江湖菜", place: "杨记隆府", tip: "川菜系，重口味爱好者的天堂" },
-          ].map((food) => (
-            <div key={food.name} className="rounded-xl border border-black/5 bg-white/40 p-4">
-              <h3 className="text-sm font-medium">{food.name}</h3>
-              <p className="mt-1 text-xs text-stone">{food.place}</p>
-              <p className="mt-0.5 text-xs text-stone/50">{food.tip}</p>
-            </div>
-          ))}
-        </div>
-      </section>
+        <h2 className="mb-5 text-xs font-semibold tracking-[3px] text-stone/50 uppercase">Suggested Itinerary</h2>
 
-      {/* 交通 */}
-      <section className="mb-12">
-        <h2 className="mb-6 text-xs font-semibold tracking-[3px] text-stone/50 uppercase">Transport</h2>
-        <div className="grid gap-4 sm:grid-cols-2">
-          <div className="rounded-2xl border border-black/5 bg-surface-card p-5">
-            <h3 className="mb-2 text-sm font-semibold">🚇 市内交通</h3>
-            <ul className="space-y-1.5 text-sm text-stone">
-              <li>• 地铁非常发达，基本覆盖所有景点</li>
-              <li>• 支付宝领乘车码直接刷</li>
-              <li>• ⚠️ 山城特色：导航显示500米可能等于爬5层楼</li>
-              <li>• 建议多用地铁，少步行爬坡</li>
-            </ul>
+        {/* Day 1 */}
+        <div className="mb-10">
+          <h3 className="mb-3 text-lg font-medium">Day 1: Cyberpunk City</h3>
+          <div className="relative mb-4 overflow-hidden rounded-2xl" style={{ aspectRatio: "16/9" }}>
+            <Image
+              src="https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=800&q=80"
+              alt="Hongya Cave"
+              fill
+              className="object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
+            <span className="absolute bottom-3 left-3 rounded-full bg-white/90 px-3 py-1 text-xs font-medium text-ink backdrop-blur-sm">🏮 Hongya Cave</span>
           </div>
-          <div className="rounded-2xl border border-celadon/10 bg-celadon/5 p-5">
-            <h3 className="mb-2 text-sm font-semibold">🚄 城市间交通</h3>
-            <ul className="space-y-1.5 text-sm text-stone">
-              <li>• 到成都: 高铁1h ¥154</li>
-              <li>• 到西安: 高铁5h ¥330</li>
-              <li>• 到广州: 高铁7h ¥445</li>
-              <li>• 到北京: 高铁10.5h 或 飞机2.5h</li>
-            </ul>
+          <div className="space-y-2 text-sm text-stone">
+            <p>🔵 <strong>Afternoon:</strong> Hongya Cave (Free, go at dusk for illuminated skyline — take the elevator from Floor 1 to Floor 11)</p>
+            <p>🔵 <strong>Evening:</strong> Yangtze River Cableway (¥20, ride south-to-north for the best views)</p>
+            <p>🔵 <strong>Night:</strong> Jiefangbei area (Free, hidden hotpot joints in the alleyways)</p>
+            <button className="mt-2 inline-flex items-center gap-1 rounded-full bg-celadon/10 px-3 py-1.5 text-xs font-medium text-celadon">
+              🚕 Show Driver
+              <ExternalLink size={12} />
+            </button>
           </div>
         </div>
+
+        {/* Day 2 */}
+        <div className="mb-10">
+          <h3 className="mb-3 text-lg font-medium">Day 2: Ancient Town & Hotpot</h3>
+          <div className="relative mb-4 overflow-hidden rounded-2xl" style={{ aspectRatio: "16/9" }}>
+            <Image
+              src="https://images.unsplash.com/photo-1508804185872-d7badad00f7d?w=800&q=80"
+              alt="Ciqikou"
+              fill
+              className="object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
+            <span className="absolute bottom-3 left-3 rounded-full bg-white/90 px-3 py-1 text-xs font-medium text-ink backdrop-blur-sm">🏘️ Ciqikou Ancient Town</span>
+          </div>
+          <div className="space-y-2 text-sm text-stone">
+            <p>🔵 <strong>Morning:</strong> Ciqikou Ancient Town (Free, go on a weekday to avoid crowds)</p>
+            <p>🔵 <strong>Afternoon:</strong> Chongqing Noodles (Xiaomian) at any street stall (¥10-15)</p>
+            <p>🔵 <strong>Evening:</strong> Chongqing Hotpot at Peijie Old Hotpot (¥80-150/person)</p>
+          </div>
+        </div>
+
+        {/* Day 3 */}
+        <div className="mb-10">
+          <h3 className="mb-3 text-lg font-medium">Day 3: Nature Excursion</h3>
+          <div className="relative mb-4 overflow-hidden rounded-2xl" style={{ aspectRatio: "16/9" }}>
+            <Image
+              src="https://images.unsplash.com/photo-1559715541-5d5e8b2b2d6a?w=800&q=80"
+              alt="Wulong"
+              fill
+              className="object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
+            <span className="absolute bottom-3 left-3 rounded-full bg-white/90 px-3 py-1 text-xs font-medium text-ink backdrop-blur-sm">🌉 Wulong Three Natural Bridges</span>
+          </div>
+          <div className="space-y-2 text-sm text-stone">
+            <p>🔵 <strong>Full Day:</strong> Wulong Three Natural Bridges (¥125, filming location for Transformers 4)</p>
+            <p>🔵 <strong>Transport:</strong> Bus or train from city center to Wulong (2-2.5h)</p>
+            <p>🔵 <strong>Evening:</strong> Hot & Sour Rice Noodles at Hao You Lai (¥12-18) + Jianghu Cuisine (¥60-120)</p>
+          </div>
+        </div>
       </section>
 
-      {/* 住宿 */}
-      <section>
-        <h2 className="mb-6 text-xs font-semibold tracking-[3px] text-stone/50 uppercase">Where to Stay</h2>
-        <div className="grid gap-3 sm:grid-cols-3">
-          {[
-            { area: "解放碑/洪崖洞区域", best: "游客首选", desc: "交通方便，夜景好，到各景点都近" },
-            { area: "观音桥区域", best: "本地生活", desc: "本地人生活区，美食多，价格适中" },
-            { area: "南滨路区域", best: "江景观赏", desc: "看江景，环境好，稍微偏一点" },
-          ].map(({ area, best, desc }) => (
-            <div key={area} className="rounded-xl border border-black/5 bg-surface-card p-4">
-              <h3 className="text-sm font-medium">{area}</h3>
-              <span className="text-[11px] text-celadon">{best}</span>
-              <p className="mt-1.5 text-xs text-stone">{desc}</p>
+      {/* GET CONNECTED - Monetization Module */}
+      <section className="mb-8 rounded-2xl border border-black/5 bg-white p-6">
+        <h2 className="mb-5 text-xs font-semibold tracking-[3px] text-stone/50 uppercase">Get Connected in China</h2>
+        <div className="grid gap-4 md:grid-cols-2">
+          {/* eSIM */}
+          <div className="rounded-xl border border-black/5 bg-gradient-to-br from-emerald-50 to-white p-5">
+            <div className="mb-3 flex items-center gap-3">
+              <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-100 text-lg">📱</span>
+              <div>
+                <p className="text-sm font-medium">eSIM for China</p>
+                <p className="text-xs text-stone/50">Instant connectivity, no physical SIM needed</p>
+              </div>
             </div>
-          ))}
+            <div className="flex gap-2">
+              <a href="#" className="flex-1 rounded-lg bg-emerald-600 py-2 text-center text-xs font-medium text-white transition-all hover:bg-emerald-700">Airalo →</a>
+              <a href="#" className="flex-1 rounded-lg bg-emerald-600 py-2 text-center text-xs font-medium text-white transition-all hover:bg-emerald-700">Holafly →</a>
+            </div>
+          </div>
+
+          {/* VPN */}
+          <div className="rounded-xl border border-black/5 bg-gradient-to-br from-blue-50 to-white p-5">
+            <div className="mb-3 flex items-center gap-3">
+              <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100 text-lg">🔒</span>
+              <div>
+                <p className="text-sm font-medium">VPN Services</p>
+                <p className="text-xs text-stone/50">Access Google, Instagram & more</p>
+              </div>
+            </div>
+            <div className="flex gap-2">
+              <a href="#" className="flex-1 rounded-lg bg-blue-600 py-2 text-center text-xs font-medium text-white transition-all hover:bg-blue-700">ExpressVPN →</a>
+              <a href="#" className="flex-1 rounded-lg bg-blue-600 py-2 text-center text-xs font-medium text-white transition-all hover:bg-blue-700">Astrill →</a>
+            </div>
+          </div>
+        </div>
+
+        {/* Buy Me a Coffee */}
+        <div className="mt-4 flex items-center justify-center gap-2 rounded-xl border border-black/5 bg-amber-50/50 py-3">
+          <Coffee size={16} className="text-amber-700" />
+          <span className="text-xs text-stone">Support Solo Developer</span>
+          <a href="#" className="rounded-full bg-amber-600 px-4 py-1 text-xs font-medium text-white transition-all hover:bg-amber-700">Buy Me a Coffee</a>
         </div>
       </section>
     </div>
