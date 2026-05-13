@@ -68,6 +68,18 @@ export async function POST(request: Request) {
         ? "Novice — needs detailed app/payment guidance"
         : "Experienced — brief app/payment tips are enough";
 
+    // City allocation logic based on trip length
+    let cityGuidance = "";
+    if (body.duration <= 3) {
+      cityGuidance = "Stay in 1 city (the entry city).";
+    } else if (body.duration <= 7) {
+      cityGuidance = "Recommend 2 cities including the entry city. Split days roughly evenly.";
+    } else if (body.duration <= 14) {
+      cityGuidance = "Recommend 3 cities including the entry city. Spend 4-5 days per city.";
+    } else {
+      cityGuidance = "Recommend 4 cities including the entry city. Spend 3-5 days per city. Use high-speed rail between cities.";
+    }
+
     const prompt = `You are EasyChina's AI travel planner. Generate a personalized China itinerary based on the user's preferences below. Respond in valid JSON only, no markdown wrapping.
 
 User profile:
@@ -82,19 +94,24 @@ User profile:
 - Dietary: ${dietLabels}
 ${body.specialNeeds ? `- Special needs: ${body.specialNeeds}` : ""}
 
+CRITICAL: The "days" array MUST contain exactly ${body.duration} entries (day 1 through day ${body.duration}). Do NOT output fewer days. This is the most important requirement.
+
+City allocation: ${cityGuidance}
+
 Rules:
-1. Recommend 1-3 cities based on the entry city and interests (reasonable geography/cost).
-2. Create ${body.duration} days of itinerary. Day 1 starts at the entry city.
-3. If multi-city, include transport between cities (high-speed rail recommended with prices).
+1. ${cityGuidance}
+2. The "days" array MUST have ${body.duration} entries. Day 1 starts at the entry city. Number them sequentially 1,2,3...${body.duration}.
+3. If multi-city, include transport between cities (high-speed rail recommended with prices) as a "transport" type item on the travel day.
 4. Each day entry MUST have: time (Morning/Midday/Afternoon/Evening/Full Day), content (activity description), and type ("transport"/"hotel"/"sight"/"food"/"shopping").
 5. Include practical tips per day: tickets, payment, transport, reservations.
 6. Include payment tips section — tailored to the user's app familiarity level.
 7. Include transport tips section — intercity + within-city.
 8. Include app tips section.
+9. Before ending, verify: the "days" array has exactly ${body.duration} items. If not, add more days.
 
 Respond with this exact JSON structure:
 {
-  "route": "string — summary of the route",
+  "route": "string — summary of the route like 'Beijing(4 days) → Xi'an(5 days) → Chengdu(5 days)'",
   "days": [
     {
       "day": number,
@@ -109,6 +126,13 @@ Respond with this exact JSON structure:
   "appTips": ["string"]
 }`;
 
+    // Dynamic token allocation: longer trips need more output
+    const maxTokens = body.duration <= 4
+      ? 4096
+      : body.duration <= 10
+        ? 6144
+        : 8192;
+
     const deepseekRes = await fetch(
       "https://api.deepseek.com/v1/chat/completions",
       {
@@ -121,7 +145,7 @@ Respond with this exact JSON structure:
           model: "deepseek-chat",
           messages: [{ role: "user", content: prompt }],
           temperature: 0.7,
-          max_tokens: 4096,
+          max_tokens: maxTokens,
         }),
       }
     );
@@ -150,6 +174,18 @@ Respond with this exact JSON structure:
     }
 
     const itinerary = JSON.parse(jsonMatch[0]);
+
+    console.log(
+      `[Itinerary] req=${body.duration}d | got=${itinerary.days?.length || 0}d | max_tokens=${maxTokens} | prompt_len=${prompt.length}`
+    );
+
+    if (itinerary.days && itinerary.days.length < body.duration) {
+      console.warn(
+        `[Itinerary] Token limit likely hit: requested ${body.duration} days, got ${itinerary.days.length}. ` +
+        `max_tokens was ${maxTokens}. Consider increasing token budget.`
+      );
+    }
+
     return NextResponse.json(itinerary);
   } catch (error) {
     console.error("Itinerary generation error:", error);

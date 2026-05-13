@@ -1,5 +1,12 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, Smartphone, CreditCard, Globe, FileCheck, QrCode } from "lucide-react";
+
+export const metadata: Metadata = {
+  title: "Prepare for China Travel",
+  description:
+    "Everything you need before landing in China: SIM cards, VPN setup, Alipay & WeChat Pay guide, essential apps, visa requirements, and a printable pre-trip checklist.",
+};
 
 const guides = [
   {

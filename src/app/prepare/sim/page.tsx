@@ -1,5 +1,12 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+
+export const metadata: Metadata = {
+  title: "SIM Cards & Internet in China",
+  description:
+    "Compare eSIM, tourist SIM, international roaming, and pocket WiFi options. VPN recommendations for accessing Google, Instagram, and WhatsApp in China.",
+};
 
 export default function SimPage() {
   return (
@@ -61,8 +68,8 @@ export default function SimPage() {
               <li>• Mullvad — privacy focused</li>
             </ul>
             <div className="mt-4 flex gap-2">
-              <a href="#" className="flex-1 rounded-lg bg-blue-600 py-2 text-center text-xs font-medium text-white transition-all hover:bg-blue-700">Get ExpressVPN →</a>
-              <a href="#" className="flex-1 rounded-lg bg-blue-600 py-2 text-center text-xs font-medium text-white transition-all hover:bg-blue-700">Get Astrill →</a>
+              <a href="https://www.expressvpn.com/" target="_blank" rel="noopener noreferrer" className="flex-1 rounded-lg bg-blue-600 py-2 text-center text-xs font-medium text-white transition-all hover:bg-blue-700">Get ExpressVPN →</a>
+              <a href="https://www.astrill.com/" target="_blank" rel="noopener noreferrer" className="flex-1 rounded-lg bg-blue-600 py-2 text-center text-xs font-medium text-white transition-all hover:bg-blue-700">Get Astrill →</a>
             </div>
           </div>
         </div>
@@ -77,8 +84,8 @@ export default function SimPage() {
             </div>
           </div>
           <div className="mt-4 flex gap-2">
-            <a href="#" className="flex-1 rounded-lg bg-emerald-600 py-2.5 text-center text-xs font-medium text-white transition-all hover:bg-emerald-700">Airalo eSIM →</a>
-            <a href="#" className="flex-1 rounded-lg bg-emerald-600 py-2.5 text-center text-xs font-medium text-white transition-all hover:bg-emerald-700">Holafly eSIM →</a>
+            <a href="https://www.airalo.com/" target="_blank" rel="noopener noreferrer" className="flex-1 rounded-lg bg-emerald-600 py-2.5 text-center text-xs font-medium text-white transition-all hover:bg-emerald-700">Airalo eSIM →</a>
+            <a href="https://esim.holafly.com/esim-china/" target="_blank" rel="noopener noreferrer" className="flex-1 rounded-lg bg-emerald-600 py-2.5 text-center text-xs font-medium text-white transition-all hover:bg-emerald-700">Holafly eSIM →</a>
           </div>
         </div>
       </div>

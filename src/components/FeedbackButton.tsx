@@ -7,16 +7,32 @@ export function FeedbackButton() {
   const [isOpen, setIsOpen] = useState(false);
   const [form, setForm] = useState({ type: "suggestion", message: "", email: "" });
   const [sent, setSent] = useState(false);
+  const [error, setError] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // 这里可以后续接 API 把反馈存下来，目前先模拟成功
-    setSent(true);
-    setTimeout(() => {
-      setIsOpen(false);
-      setSent(false);
-      setForm({ type: "suggestion", message: "", email: "" });
-    }, 2000);
+    setError("");
+    try {
+      const res = await fetch("/api/feedback", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setError(data.error || "Something went wrong. Please try again.");
+        return;
+      }
+      setSent(true);
+      setTimeout(() => {
+        setIsOpen(false);
+        setSent(false);
+        setForm({ type: "suggestion", message: "", email: "" });
+        setError("");
+      }, 2000);
+    } catch {
+      setError("Network error. Please check your connection and try again.");
+    }
   };
 
   return (
@@ -102,6 +118,12 @@ export function FeedbackButton() {
                     className="w-full rounded-xl border border-black/10 bg-white/60 px-4 py-2.5 text-sm outline-none transition-colors focus:border-celadon focus:ring-1 focus:ring-celadon/20"
                   />
                 </div>
+
+                {error && (
+                  <div className="rounded-lg border border-red-200 bg-red-50 p-3 text-xs text-red-600">
+                    {error}
+                  </div>
+                )}
 
                 <button
                   type="submit"

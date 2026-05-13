@@ -1,5 +1,12 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+
+export const metadata: Metadata = {
+  title: "About EasyChina",
+  description:
+    "EasyChina is an AI-powered travel planner built for foreigners visiting China. We make trip planning simple — from itineraries to SIM cards and payment guides.",
+};
 
 export default function AboutPage() {
   return (

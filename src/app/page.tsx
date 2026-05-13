@@ -1,5 +1,12 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, Sparkles, Shield, Map } from "lucide-react";
+
+export const metadata: Metadata = {
+  title: "China Travel, Made Easy",
+  description:
+    "AI-powered travel planner for foreigners visiting China. Personalized itineraries, SIM cards, VPN, payment guides, and insider tips — all in one place.",
+};
 
 const popularCities = [
   { name: "Beijing", slug: "beijing", tag: "🏛️ Ancient Capital & Modern Hub", type: "History & Culture", bg: "bg-[#E8E3DC]" },
@@ -191,9 +198,9 @@ export default function Home() {
             </a>
           </div>
           <div className="mt-6 flex items-center justify-center gap-4 text-xs text-stone/50">
-            <a href="#" className="hover:text-stone">📱 Airalo eSIM</a>
-            <a href="#" className="hover:text-stone">🔒 ExpressVPN</a>
-            <a href="#" className="hover:text-stone">☕ Support Us</a>
+            <a href="https://www.airalo.com/" target="_blank" rel="noopener noreferrer" className="hover:text-stone">📱 Airalo eSIM</a>
+            <a href="https://www.expressvpn.com/" target="_blank" rel="noopener noreferrer" className="hover:text-stone">🔒 ExpressVPN</a>
+            <a href="https://www.buymeacoffee.com/easychina" target="_blank" rel="noopener noreferrer" className="hover:text-stone">☕ Support Us</a>
           </div>
         </div>
       </section>

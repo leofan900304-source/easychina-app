@@ -1,5 +1,12 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+
+export const metadata: Metadata = {
+  title: "China Visa Guide for Tourists",
+  description:
+    "L-Visa requirements, 144-hour visa-free transit policy, eligible cities, required documents, and arrival tips for international travelers visiting China.",
+};
 
 export default function VisaPage() {
   return (

@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from "react";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
@@ -26,6 +29,21 @@ const preferenceFilters = [
 ];
 
 export default function CitiesPage() {
+  const [activeFilter, setActiveFilter] = useState("All");
+
+  const filteredCities =
+    activeFilter === "All"
+      ? cities
+      : cities.filter((city) =>
+          city.type.some((t) => {
+            // "Nature & Scenery" filter also matches cities tagged with plain "Nature"
+            if (activeFilter === "Nature & Scenery") {
+              return t === "Nature & Scenery" || t === "Nature";
+            }
+            return t === activeFilter;
+          })
+        );
+
   return (
     <div className="mx-auto max-w-5xl px-6 py-12 md:py-20">
       <div className="mb-10">
@@ -39,15 +57,23 @@ export default function CitiesPage() {
       {/* Filters */}
       <div className="mb-8 flex flex-wrap gap-2">
         {preferenceFilters.map((filter) => (
-          <button key={filter} className="rounded-full border border-black/5 bg-surface-card px-4 py-1.5 text-xs font-medium text-stone transition-all hover:border-celadon/30 hover:text-celadon">
+          <button
+            key={filter}
+            onClick={() => setActiveFilter(filter)}
+            className={`rounded-full border px-4 py-1.5 text-xs font-medium transition-all ${
+              activeFilter === filter
+                ? "border-celadon bg-celadon/10 text-celadon"
+                : "border-black/5 bg-surface-card text-stone hover:border-celadon/30 hover:text-celadon"
+            }`}
+          >
             {filter}
           </button>
         ))}
       </div>
 
-      {/* City Grid — Original style */}
+      {/* City Grid */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {cities.map((city) => (
+        {filteredCities.map((city) => (
           <Link
             key={city.slug}
             href={`/cities/${city.slug}`}
@@ -68,6 +94,12 @@ export default function CitiesPage() {
           </Link>
         ))}
       </div>
+
+      {filteredCities.length === 0 && (
+        <p className="py-12 text-center text-sm text-stone">
+          No cities match this filter. Try another category.
+        </p>
+      )}
     </div>
   );
 }

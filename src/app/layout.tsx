@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { Analytics } from "@vercel/analytics/react";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { FeedbackButton } from "@/components/FeedbackButton";
 import { AIChat } from "@/components/AIChat";
+import { AffiliateBar } from "@/components/AffiliateBar";
 import "./globals.css";
 
 const inter = Inter({
@@ -42,6 +44,8 @@ export default function RootLayout({
         <Footer />
         <AIChat />
         <FeedbackButton />
+        <Analytics />
+        <AffiliateBar />
       </body>
     </html>
   );

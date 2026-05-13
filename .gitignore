@@ -31,6 +31,11 @@ yarn-error.log*
 # vercel
 .vercel
 
+# feedback data (local file-based storage)
+feedback-data.json
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+.vercel

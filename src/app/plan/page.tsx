@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowRight, ArrowLeft, Sparkles } from "lucide-react";
+import { MonetizationSidebar } from "@/components/MonetizationSidebar";
 
 /* ===== Step definitions ===== */
 type TravelPreferences = {
@@ -117,7 +118,7 @@ export default function PlanPage() {
       if (!res.ok) throw new Error("API error");
       const data = await res.json();
       // Store the result in sessionStorage and redirect
-      sessionStorage.setItem("itinerary", JSON.stringify(data));
+      localStorage.setItem("itinerary", JSON.stringify(data));
       router.push("/plan/result/custom");
     } catch {
       // Fallback: use demo data if API fails
@@ -158,6 +159,7 @@ export default function PlanPage() {
             50% { transform: translateX(200%); }
           }
         `}</style>
+        <MonetizationSidebar />
       </div>
     );
   }
@@ -527,6 +529,7 @@ export default function PlanPage() {
           </button>
         )}
       </div>
+    <MonetizationSidebar />
     </div>
   );
 }

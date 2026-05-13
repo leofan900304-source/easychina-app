@@ -1,5 +1,12 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+
+export const metadata: Metadata = {
+  title: "Payments in China — Alipay & WeChat Pay",
+  description:
+    "How to set up Alipay and WeChat Pay as a foreigner. International credit card acceptance, cash tips, and a step-by-step guide to cashless payments in China.",
+};
 
 export default function PaymentPage() {
   return (
