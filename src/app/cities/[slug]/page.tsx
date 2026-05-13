@@ -129,7 +129,7 @@ export default function CityPage({ params }: { params: { slug: string } }) {
                   🔵 <strong>{activity.timeOfDay}:</strong> {activity.description}
                 </p>
               ))}
-              {dayIndex === 0 && <ShowDriverButton />}
+              {dayIndex === 0 && <ShowDriverButton cityNameCn={city.nameCn} />}
             </div>
           </div>
         ))}

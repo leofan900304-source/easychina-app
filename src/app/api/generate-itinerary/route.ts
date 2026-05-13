@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
 
 /* ===== Request Schema ===== */
 interface PlanRequest {
@@ -14,6 +15,57 @@ interface PlanRequest {
   specialNeeds: string;
 }
 
+const VALID_BUDGETS = ["budget", "economic", "comfortable", "luxury"];
+const VALID_COMPANIONS = ["solo", "couple", "friends", "family_kids", "family_elderly"];
+const VALID_PACES = ["packed", "balanced", "relaxed"];
+const VALID_PREFERENCES = ["history", "nature", "urban", "food", "tech", "culture", "relax", "adventure"];
+const VALID_DIETS = ["none", "vegetarian", "halal", "no_spicy"];
+
+function validatePlanRequest(body: unknown): { ok: true; data: PlanRequest } | { ok: false; error: string } {
+  if (!body || typeof body !== "object") {
+    return { ok: false, error: "Request body must be an object" };
+  }
+  const b = body as Record<string, unknown>;
+
+  if (typeof b.entryCity !== "string" || b.entryCity.length === 0 || b.entryCity.length > 100) {
+    return { ok: false, error: "Invalid entryCity" };
+  }
+  if (typeof b.duration !== "number" || !Number.isInteger(b.duration) || b.duration < 1 || b.duration > 30) {
+    return { ok: false, error: "duration must be an integer 1-30" };
+  }
+  if (typeof b.budget !== "string" || !VALID_BUDGETS.includes(b.budget)) {
+    return { ok: false, error: "Invalid budget" };
+  }
+  if (typeof b.companions !== "string" || !VALID_COMPANIONS.includes(b.companions)) {
+    return { ok: false, error: "Invalid companions" };
+  }
+  if (typeof b.firstTime !== "boolean") {
+    return { ok: false, error: "firstTime must be boolean" };
+  }
+  if (typeof b.appFamiliarity !== "number" || !Number.isInteger(b.appFamiliarity) || b.appFamiliarity < 1 || b.appFamiliarity > 5) {
+    return { ok: false, error: "appFamiliarity must be integer 1-5" };
+  }
+  if (!Array.isArray(b.preferences) || b.preferences.length === 0 || b.preferences.length > 10) {
+    return { ok: false, error: "preferences must be a non-empty array (max 10)" };
+  }
+  if (!b.preferences.every((p: unknown) => typeof p === "string" && VALID_PREFERENCES.includes(p))) {
+    return { ok: false, error: "Invalid preference value" };
+  }
+  if (typeof b.pace !== "string" || !VALID_PACES.includes(b.pace)) {
+    return { ok: false, error: "Invalid pace" };
+  }
+  if (!Array.isArray(b.diet) || b.diet.length > 10) {
+    return { ok: false, error: "diet must be an array (max 10)" };
+  }
+  if (!b.diet.every((d: unknown) => typeof d === "string" && VALID_DIETS.includes(d))) {
+    return { ok: false, error: "Invalid diet value" };
+  }
+  if (typeof b.specialNeeds !== "string" || b.specialNeeds.length > 500) {
+    return { ok: false, error: "specialNeeds must be a string (max 500 chars)" };
+  }
+  return { ok: true, data: b as unknown as PlanRequest };
+}
+
 const cityNameMap: Record<string, string> = {
   beijing_capital: "Beijing (PEK)",
   beijing_daxing: "Beijing (PKX)",
@@ -23,6 +75,10 @@ const cityNameMap: Record<string, string> = {
   chengdu_tianfu: "Chengdu (TFU)",
   xian_xianyang: "Xi'an (XIY)",
   chongqing_jiangbei: "Chongqing (CKG)",
+  hangzhou_xiaoshan: "Hangzhou (HGH)",
+  kunming_changshui: "Kunming (KMG)",
+  guilin_liangjiang: "Guilin (KWL)",
+  lijiang_sanyi: "Lijiang (LJG)",
 };
 
 const preferenceLabels: Record<string, string> = {
@@ -38,7 +94,18 @@ const preferenceLabels: Record<string, string> = {
 
 export async function POST(request: Request) {
   try {
-    const body: PlanRequest = await request.json();
+    const ip = getClientIp(request);
+    const allowed = await checkRateLimit(ip, "generate-itinerary", 3, "1 m");
+    if (!allowed) {
+      return NextResponse.json({ error: "Too many requests. Please wait and try again." }, { status: 429 });
+    }
+
+    const raw = await request.json();
+    const validation = validatePlanRequest(raw);
+    if (!validation.ok) {
+      return NextResponse.json({ error: validation.error }, { status: 400 });
+    }
+    const body = validation.data;
 
     // Build prompt
     const entryCityName = cityNameMap[body.entryCity] || body.entryCity;
@@ -161,29 +228,39 @@ Respond with this exact JSON structure:
 
     const data = await deepseekRes.json();
 
-    // Parse the AI response
-    const content = data.choices?.[0]?.message?.content || "";
-    // Try to extract JSON from the response
-    const jsonMatch = content.match(/\{[\s\S]*\}/);
-    if (!jsonMatch) {
-      console.error("No JSON found in response:", content);
+    // Parse the AI response — strip markdown fences, find JSON object
+    const content = (data.choices?.[0]?.message?.content || "").replace(/```json\s*|\s*```/g, "");
+    const jsonStart = content.indexOf("{");
+    const jsonEnd = content.lastIndexOf("}");
+    if (jsonStart === -1 || jsonEnd === -1 || jsonStart >= jsonEnd) {
+      console.error("No valid JSON found in response:", content.slice(0, 500));
       return NextResponse.json(
         { error: "Failed to parse AI response" },
         { status: 500 }
       );
     }
+    const jsonStr = content.slice(jsonStart, jsonEnd + 1);
+    let itinerary: Record<string, unknown>;
+    try {
+      itinerary = JSON.parse(jsonStr);
+    } catch {
+      return NextResponse.json({ error: "Invalid itinerary JSON" }, { status: 500 });
+    }
 
-    const itinerary = JSON.parse(jsonMatch[0]);
-
-    console.log(
-      `[Itinerary] req=${body.duration}d | got=${itinerary.days?.length || 0}d | max_tokens=${maxTokens} | prompt_len=${prompt.length}`
-    );
-
-    if (itinerary.days && itinerary.days.length < body.duration) {
-      console.warn(
-        `[Itinerary] Token limit likely hit: requested ${body.duration} days, got ${itinerary.days.length}. ` +
-        `max_tokens was ${maxTokens}. Consider increasing token budget.`
+    const days = Array.isArray(itinerary.days) ? itinerary.days : [];
+    if (process.env.NODE_ENV === "development") {
+      console.log(
+        `[Itinerary] req=${body.duration}d | got=${days.length}d | max_tokens=${maxTokens} | prompt_len=${prompt.length}`
       );
+    }
+
+    if (days.length < body.duration) {
+      if (process.env.NODE_ENV === "development") {
+        console.warn(
+          `[Itinerary] Token limit likely hit: requested ${body.duration} days, got ${days.length}. ` +
+          `max_tokens was ${maxTokens}. Consider increasing token budget.`
+        );
+      }
     }
 
     return NextResponse.json(itinerary);

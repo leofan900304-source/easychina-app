@@ -1,102 +1,154 @@
 "use client";
 
-import { useState } from "react";
-import { Download, Share2, X, Check, QrCode } from "lucide-react";
+import { useState, type RefObject } from "react";
+import { Download, Share2, X, Check, Copy } from "lucide-react";
+import { encodeItinerary, buildShareUrl } from "@/lib/share";
 
-export function ShareModal() {
-  const [isOpen, setIsOpen] = useState(false);
-  const [copied, setCopied] = useState(false);
+interface ShareModalProps {
+  itinerary: unknown;
+  printRef: RefObject<HTMLDivElement | null>;
+  pdfFilename?: string;
+  className?: string;
+}
 
-  const pageUrl = typeof window !== "undefined" ? window.location.href : "";
+export function ShareModal({ itinerary, printRef, pdfFilename = "EasyChina_Itinerary.pdf", className = "" }: ShareModalProps) {
+  const [showQR, setShowQR] = useState(false);
+  const [qrDataUrl, setQrDataUrl] = useState("");
+  const [shareUrl, setShareUrl] = useState("");
+  const [showCopied, setShowCopied] = useState(false);
+  const [pdfGenerating, setPdfGenerating] = useState(false);
 
-  const handleCopyLink = () => {
-    navigator.clipboard.writeText(pageUrl).then(() => {
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    });
+  const generatePDF = async () => {
+    if (!printRef.current) return;
+    setPdfGenerating(true);
+
+    try {
+      const html2canvas = (await import("html2canvas")).default;
+      const { jsPDF } = await import("jspdf");
+
+      const canvas = await html2canvas(printRef.current, {
+        scale: 2,
+        useCORS: true,
+        backgroundColor: "#ffffff",
+      });
+
+      const imgData = canvas.toDataURL("image/png");
+      const imgWidth = 210;
+      const pageHeight = 297;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+      const pdf = new jsPDF("p", "mm", "a4");
+      let heightLeft = imgHeight;
+      let position = 0;
+
+      pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
+      heightLeft -= pageHeight;
+
+      while (heightLeft > 0) {
+        position = position - pageHeight;
+        pdf.addPage();
+        pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+      }
+
+      pdf.save(pdfFilename);
+    } catch (err) {
+      console.error("PDF generation failed:", err);
+    } finally {
+      setPdfGenerating(false);
+    }
   };
 
-  const handleDownloadPDF = () => {
-    window.print();
+  const handleShare = async () => {
+    const encoded = encodeItinerary(itinerary);
+    const url = buildShareUrl(encoded);
+    setShareUrl(url);
+
+    try {
+      const QRCode = (await import("qrcode")).default;
+      const dataUrl = await QRCode.toDataURL(url, {
+        width: 300,
+        margin: 2,
+        color: { dark: "#5C7A6E", light: "#ffffff" },
+      });
+      setQrDataUrl(dataUrl);
+    } catch {
+      // QR generation failed — share URL still available
+    }
+
+    setShowQR(true);
   };
 
-  const shareData = {
-    title: "EasyChina Travel Itinerary",
-    text: "Check out my personalized China travel itinerary!",
-    url: pageUrl,
-  };
-
-  // Web Share API not supported in all browsers, but TS DOM types declare it as always-present
-  const nav = typeof window !== "undefined" ? (navigator as { share?: typeof navigator.share }) : null;
-  const supportsShare = !!nav?.share;
-
-  const handleNativeShare = async () => {
-    if (supportsShare) {
-      try { await navigator.share(shareData); } catch {}
-    } else {
-      handleCopyLink();
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(shareUrl);
+      setShowCopied(true);
+      setTimeout(() => setShowCopied(false), 2000);
+    } catch {
+      const input = document.createElement("input");
+      input.value = shareUrl;
+      document.body.appendChild(input);
+      input.select();
+      document.execCommand("copy");
+      document.body.removeChild(input);
+      setShowCopied(true);
+      setTimeout(() => setShowCopied(false), 2000);
     }
   };
 
   return (
     <>
-      {/* Share & Download buttons */}
-      <div className="flex gap-3">
-        <button onClick={handleDownloadPDF} className="btn-primary flex-1 justify-center text-sm">
+      <div className={`flex gap-3 ${className}`}>
+        <button
+          onClick={generatePDF}
+          disabled={pdfGenerating}
+          className={`btn-primary flex-1 justify-center text-sm py-3 ${pdfGenerating ? "pointer-events-none opacity-60" : ""}`}
+        >
           <Download size={16} />
-          Download PDF
+          {pdfGenerating ? "Generating..." : "Download PDF"}
         </button>
-        <button onClick={() => setIsOpen(true)} className="btn-secondary flex-1 justify-center text-sm">
+        <button onClick={handleShare} className="btn-secondary flex-1 justify-center text-sm py-3">
           <Share2 size={16} />
           Share
         </button>
       </div>
 
-      {/* Share Modal */}
-      {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/20 p-4 backdrop-blur-sm sm:items-center">
-          <div className="w-full max-w-sm animate-slide-up rounded-2xl border border-black/5 bg-paper p-6 shadow-elevated">
-            <div className="mb-5 flex items-center justify-between">
-              <h2 className="text-sm font-medium">Share Itinerary</h2>
-              <button onClick={() => setIsOpen(false)} className="p-1 text-stone/40 hover:text-stone">
+      {showQR && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4" onClick={() => setShowQR(false)}>
+          <div className="w-full max-w-sm rounded-2xl bg-white p-6 shadow-xl" onClick={(e) => e.stopPropagation()}>
+            <div className="mb-4 flex items-center justify-between">
+              <h3 className="font-semibold">Share Your Itinerary</h3>
+              <button onClick={() => setShowQR(false)} className="rounded-lg p-1 text-stone/40 hover:bg-black/5">
                 <X size={18} />
               </button>
             </div>
 
-            {/* QR Code placeholder */}
-            <div className="mb-5 flex flex-col items-center">
-              <div className="flex h-32 w-32 items-center justify-center rounded-xl border border-black/5 bg-white">
-                <QrCode size={64} className="text-stone/30" />
+            {qrDataUrl ? (
+              <div className="mx-auto mb-4 flex h-56 w-56 items-center justify-center rounded-xl bg-celadon/5">
+                <img src={qrDataUrl} alt="QR Code" className="h-52 w-52" />
               </div>
-              <p className="mt-2 text-xs text-stone/50">Scan to view on your phone</p>
-            </div>
+            ) : (
+              <div className="mx-auto mb-4 flex h-56 w-56 items-center justify-center rounded-xl bg-black/5">
+                <div className="h-6 w-6 animate-spin rounded-full border-2 border-celadon border-t-transparent" />
+              </div>
+            )}
 
-            {/* Share options */}
-            <div className="space-y-2">
+            <p className="mb-3 text-center text-xs text-stone/60">
+              Scan QR code or copy the link to share
+            </p>
+
+            <div className="flex items-center gap-2">
+              <input
+                readOnly
+                value={shareUrl}
+                className="flex-1 rounded-lg border border-black/10 bg-black/5 px-3 py-2 text-xs text-stone outline-none"
+              />
               <button
-                onClick={handleCopyLink}
-                className="flex w-full items-center gap-3 rounded-xl border border-black/5 bg-white px-4 py-3 text-sm transition-all hover:border-black/10"
+                onClick={handleCopy}
+                className="flex items-center gap-1.5 rounded-lg bg-celadon px-4 py-2 text-xs font-medium text-white transition-all hover:bg-celadon/90"
               >
-                {copied ? <Check size={16} className="text-green-600" /> : <Share2 size={16} className="text-stone" />}
-                <span>{copied ? "Link copied!" : "Copy link"}</span>
-              </button>
-
-              {supportsShare && (
-                <button
-                  onClick={handleNativeShare}
-                  className="flex w-full items-center gap-3 rounded-xl bg-celadon px-4 py-3 text-sm font-medium text-paper transition-all hover:bg-celadon/90"
-                >
-                  <Share2 size={16} />
-                  <span>Share via...</span>
-                </button>
-              )}
-
-              <button
-                onClick={handleDownloadPDF}
-                className="flex w-full items-center gap-3 rounded-xl border border-black/5 bg-white px-4 py-3 text-sm transition-all hover:border-black/10"
-              >
-                <Download size={16} className="text-stone" />
-                <span>Download PDF</span>
+                {showCopied ? <Check size={14} /> : <Copy size={14} />}
+                {showCopied ? "Copied!" : "Copy"}
               </button>
             </div>
           </div>

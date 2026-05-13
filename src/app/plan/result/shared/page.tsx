@@ -5,39 +5,8 @@ import Link from "next/link";
 import { ArrowLeft, ChevronDown, ChevronUp } from "lucide-react";
 import { decodeItinerary } from "@/lib/share";
 import { MonetizationSidebar } from "@/components/MonetizationSidebar";
-
-interface ItineraryItem {
-  time: string;
-  content: string;
-  type: string;
-  cn?: string;
-  metro?: string;
-  walking?: string;
-}
-
-interface ItineraryDay {
-  day: number;
-  title: string;
-  location: string;
-  items: ItineraryItem[];
-  tips: string[];
-}
-
-interface ItineraryData {
-  route: string;
-  days: ItineraryDay[];
-  paymentTips: string[];
-  transportTips: string[];
-  appTips: string[];
-}
-
-const typeIcons: Record<string, string> = {
-  transport: "🚄",
-  hotel: "🏨",
-  sight: "📍",
-  food: "🍜",
-  shopping: "🛍️",
-};
+import type { ItineraryData } from "@/types/itinerary";
+import { typeIcons } from "@/types/itinerary";
 
 export default function SharedResultPage() {
   const [itinerary, setItinerary] = useState<ItineraryData | null>(null);
@@ -61,13 +30,15 @@ export default function SharedResultPage() {
 
   if (error) {
     return (
-      <div className="mx-auto max-w-3xl px-6 py-20 text-center">
-        <p className="text-stone">{error}</p>
-        <Link href="/plan" className="btn-primary mt-6 inline-flex text-sm">
-          Start Planning
-        </Link>
+      <>
+        <div className="mx-auto max-w-3xl px-6 py-20 text-center">
+          <p className="text-stone">{error}</p>
+          <Link href="/plan" className="btn-primary mt-6 inline-flex text-sm">
+            Start Planning
+          </Link>
+        </div>
         <MonetizationSidebar />
-      </div>
+      </>
     );
   }
 
@@ -83,6 +54,7 @@ export default function SharedResultPage() {
   }
 
   return (
+    <>
     <div className="mx-auto max-w-3xl px-6 py-8 md:py-16">
       <Link href="/plan" className="mb-8 inline-flex items-center gap-1.5 text-xs text-stone">
         <ArrowLeft size={14} />
@@ -212,7 +184,8 @@ export default function SharedResultPage() {
           Create Your Own Trip
         </Link>
       </div>
-      <MonetizationSidebar />
     </div>
+      <MonetizationSidebar />
+    </>
   );
 }

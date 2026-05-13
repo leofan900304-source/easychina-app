@@ -1,9 +1,15 @@
 /**
  * Encode itinerary data into a URL-safe base64 string for sharing.
+ * Handles non-ASCII characters (Chinese, emoji) correctly via UTF-8.
  */
 export function encodeItinerary(data: unknown): string {
   const json = JSON.stringify(data);
-  return btoa(encodeURIComponent(json));
+  const bytes = new TextEncoder().encode(json);
+  let bin = "";
+  for (let i = 0; i < bytes.length; i++) {
+    bin += String.fromCharCode(bytes[i]);
+  }
+  return btoa(bin);
 }
 
 /**
@@ -11,7 +17,12 @@ export function encodeItinerary(data: unknown): string {
  */
 export function decodeItinerary<T = unknown>(encoded: string): T | null {
   try {
-    return JSON.parse(decodeURIComponent(atob(encoded)));
+    const bin = atob(encoded);
+    const bytes = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; i++) {
+      bytes[i] = bin.charCodeAt(i);
+    }
+    return JSON.parse(new TextDecoder().decode(bytes));
   } catch {
     return null;
   }

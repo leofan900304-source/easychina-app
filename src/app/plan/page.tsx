@@ -45,6 +45,10 @@ const entryCities = [
   { value: "chengdu_tianfu", label: "成都天府 (TFU)" },
   { value: "xian_xianyang", label: "西安咸阳 (XIY)" },
   { value: "chongqing_jiangbei", label: "重庆江北 (CKG)" },
+  { value: "hangzhou_xiaoshan", label: "杭州萧山 (HGH)" },
+  { value: "kunming_changshui", label: "昆明长水 (KMG)" },
+  { value: "guilin_liangjiang", label: "桂林两江 (KWL)" },
+  { value: "lijiang_sanyi", label: "丽江三义 (LJG)" },
 ];
 
 const preferenceOptions = [
